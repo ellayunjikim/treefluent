@@ -1,0 +1,6 @@
+Shiny app plan:
+overview
+Different tab for each question
+Panel to select information
+
+Add information to each tab (text/explanatory information)

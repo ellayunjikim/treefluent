@@ -1,0 +1,56 @@
+<html> 
+  <head> 
+    {{ headContent() }} 
+    {{ bootstrapLib() }} 
+<style>
+div.scrollmenu {
+background-color: #333;
+overflow: auto;
+white-space: nowrap;
+}
+
+div.scrollmenu a {
+display: inline-block;
+color: white;
+text-align: center;
+padding: 14px;
+text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+background-color: #777;
+}
+</style>
+ 
+<body style="font-family: tahoma">
+  </head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <body> 
+    <h1><b>TREEFLUENT</b></h1> 
+<div class="scrollmenu">
+  <a data-toggle="tab" href="#home">Home</a></li>
+  <a data-toggle="tab" href="#firstvis">First Visualization</a>
+  <a data-toggle="tab" href="#q1">Question #1</a>
+  <a data-toggle="tab" href="#q2">Question #2</a>
+  <a data-toggle="tab" href="#q3">Question #3</a>
+</div>
+    <div id="home" class="tab-pane fade">
+    <h1>Treefluent Project</h1>
+    <p>Hello. This is a project. Hello. Goodbye.</p></div>
+    <div id="firstvis" class="tab-pane fade">
+    <h2>First Visualization: Collapsible Tree</h2>
+    <p>This is page for first visualization.</p></div>
+    <div id="q1" class= "tab-pane fade">
+      <h2>Question #1</h2>
+       <h3>Control panel</h3> 
+          {{ slider }} 
+          {{ text }} 
+         <div id="listMovies" class="shiny-html-output"></div> 
+           {{ comboBox }} 
+      </div>
+  </body> 
+</html>  
+
+
+
+

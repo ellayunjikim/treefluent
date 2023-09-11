@@ -1,0 +1,110 @@
+#Time on x Percent on Y
+library(shiny)
+library(tidymodels)
+library(readxl)
+library(shiny)
+library(ggplot2)
+library(plotly)
+library("RColorBrewer")
+library(reshape2)
+library(tidyverse)
+
+
+dataset <- read_excel("/Users/harrymacarthur/Desktop/CSC 324/Group Proj/perc-firty.xlsx")
+
+minYear <- min(dataset$Test_Year)
+maxYear <- max(dataset$Test_Year)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Percent Learned Over Time"),
+
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+        sidebarPanel(
+          checkboxGroupInput("LO", 
+                             label = h4("Learning Outcome"), 
+                             choices = list("1",
+                                            "2", 
+                                            "3",
+                                            "4",
+                                            "5",
+                                            "6"),
+                             selected = 1),
+          
+          selectInput("Program",
+                      label = h4("Programs"),
+                      choices = unique(dataset[["Program"]]),
+                      multiple = TRUE,
+                      selected = unique(dataset[["Program"]])
+          ),
+          
+          sliderInput("years", 
+                      label = h4("Time Range"),
+                      min = minYear, 
+                      max = maxYear,
+                      sep = "",
+                      value = c(minYear, maxYear)
+                      ),
+          
+          selectInput("Color",
+                      label = h4("Color Scale"),
+                      choices = list("YlGnBu",
+                                     "YlOrRd",
+                                     "RdYlGn",
+                                     "Spectral"),
+                      multiple = FALSE,
+                      selected = "RdYlGn"
+          )
+        ),
+        
+        
+
+        # Show a plot of the generated distribution
+        mainPanel(
+           plotlyOutput("plotman")
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$plotman <- renderPlotly({
+      
+      col <- input$Color
+      data <- filter(dataset, LO_Num %in% input$LO,
+                     Program %in% input$Program,
+                     Test_Year >= input$years[1], 
+                     Test_Year <= input$years[2])
+      
+      X <- data$Test_Year
+      Y <- data$Test_Perc
+      
+      
+      
+      fv <- data %>% lm(Test_Perc ~ Test_Year,.) %>% fitted.values()
+      
+    
+        plot_ly(data, 
+                x = ~Test_Year,  
+                y = ~Test_Perc,
+                type = 'scatter',
+                mode = 'markers',
+                text = ~paste('Program: ', Program, ' \nLearning Outcome: ', LO_Num),
+                color = ~Test_Perc,
+                colors = col
+                ) %>%
+          layout(paper_bgcolor='#c4c4c4',
+                 plot_bgcolor='#c4c4c4') %>% 
+          add_trace(x = ~Test_Year, y = fv, mode = "lines", color = "colin finke") %>%
+          layout(showlegend = F)
+        
+  
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
